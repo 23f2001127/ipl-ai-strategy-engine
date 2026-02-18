@@ -112,7 +112,7 @@ Then open the browser link shown in terminal.
 
 ## 👤 Author
 
-*Antareep Ghosh**  
+**Antareep Ghosh**  
  
 ---
 
