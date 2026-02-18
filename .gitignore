@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+venv/
+.DS_Store
+ipl_male_json/
+X_seq.npy
+y_seq.npy
+Thumbs.db
