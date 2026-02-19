@@ -1,6 +1,9 @@
 import streamlit as st
 
-st.set_page_config(page_title="AI Cricket Strategy Engine", layout="centered")
+st.set_page_config(
+    page_title="AI Cricket Strategy Engine",
+    page_icon="🏏"
+)
 
 st.title("🏏 AI Cricket Strategy Engine")
 

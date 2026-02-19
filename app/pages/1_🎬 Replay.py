@@ -1,9 +1,26 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from app.lstm_predict import load_lstm, predict_lstm
+import os
+import sys
+
+st.set_page_config(
+    page_title="Replay",
+    page_icon="🎬"
+)
+
+CURRENT_DIR = os.path.dirname(__file__)          
+APP_DIR = os.path.dirname(CURRENT_DIR)           
+PROJECT_ROOT = os.path.dirname(APP_DIR)          
+
+sys.path.append(APP_DIR)
+
+from lstm_predict import load_lstm, predict_lstm
+
 
 st.title("🎬 Replay Real IPL Match")
+
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 
 @st.cache_resource
 def load_dl_model():
@@ -11,11 +28,11 @@ def load_dl_model():
 
 @st.cache_resource
 def load_dataset():
-    return pd.read_csv("ipl_features_advanced.csv")
+    return pd.read_csv(os.path.join(DATA_DIR, "ipl_features_advanced.csv"))
 
 @st.cache_resource
 def load_match_info():
-    return pd.read_csv("match_info.csv")
+    return pd.read_csv(os.path.join(DATA_DIR, "match_info.csv"))
 
 dl_model = load_dl_model()
 df_all = load_dataset()
@@ -27,11 +44,13 @@ selected_match = st.selectbox("Choose Match ID", match_ids)
 if selected_match:
 
     info = info_df[info_df["match_id"] == selected_match]
+    
     if len(info):
         row = info.iloc[0]
         st.write(f"### {row.team1} vs {row.team2}")
         st.write(f"Season: {row.season}")
         st.write(f"Venue: {row.venue}")
+        
 
     match_df = df_all[df_all["match_id"] == selected_match].reset_index(drop=True)
 
@@ -52,9 +71,11 @@ if selected_match:
 
         prob = predict_lstm(dl_model, seq)
         probs.append(prob)
-
+        
+    chasing_team = match_df.iloc[-1]["batting_team"]
+    st.write(f"Chasing Team: **{chasing_team}**")
     st.line_chart(probs)
-    st.caption("Win probability throughout the match.")
+    st.caption(f"Win probability of **{chasing_team}** throughout innings")
 
     st.subheader("🔥 Key Turning Points")
 
@@ -67,4 +88,6 @@ if selected_match:
     top = changes[:3]
 
     for idx, diff in top:
-        st.write(f"Ball {idx}: Win probability changed by {diff:.2f}")
+        direction = "increased" if probs[idx] > probs[idx-1] else "decreased"
+        st.write(f"Ball {idx}: Win probability of chasing team {direction} by {diff:.2f}")
+

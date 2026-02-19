@@ -1,7 +1,22 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from app.lstm_predict import load_lstm, predict_lstm
+import os
+import sys
+
+st.set_page_config(
+    page_title="Strategy",
+    page_icon="🎯"
+)
+
+CURRENT_DIR = os.path.dirname(__file__)          
+APP_DIR = os.path.dirname(CURRENT_DIR)           
+PROJECT_ROOT = os.path.dirname(APP_DIR)          
+
+sys.path.append(APP_DIR)
+
+from lstm_predict import load_lstm, predict_lstm
+
 
 st.title("🎯 Bowling Strategy Advisor")
 
@@ -10,13 +25,15 @@ Choose match situation and available bowlers.
 The AI recommends the best bowler based on real IPL data.
 """)
 
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
+
 @st.cache_resource
 def load_dl_model():
     return load_lstm()
 
 @st.cache_resource
 def load_impact():
-    return pd.read_csv("bowler_impact.csv")
+    return pd.read_csv(os.path.join(DATA_DIR, "bowler_impact.csv"))
 
 dl_model = load_dl_model()
 impact_df = load_impact()
@@ -46,7 +63,7 @@ if balls_left > 0:
     else:
         dl_prob = predict_lstm(dl_model, seq)
 
-    st.subheader(f"Current Win Probability: {dl_prob:.2f}")
+    st.subheader(f"Current Win Probability of Chasing Team: {dl_prob:.2f}")
 
 else:
     st.subheader("Match Finished")
@@ -62,7 +79,7 @@ selected = st.multiselect(
 
 if selected:
 
-    SCALE = 2.0
+    SCALE = 0.15
     suggestions = []
 
     for bowler in selected:
@@ -84,8 +101,16 @@ if selected:
     st.write("### Suggested Bowling Order")
 
     for bowler, prob, change in suggestions:
-        sign = "+" if change > 0 else ""
-        st.write(f"{bowler} → Win Prob: {prob:.2f} ({sign}{change:.2f})")
-
+        percent_change = abs(change)
+        if change > 0:
+            text = f"{bowler} → Win probability of chasing team will **increase** by {percent_change:.3f}"
+            st.write(text)
+        elif change < 0:
+            text = f"{bowler} → Win probability of chasing team will **decrease** by {percent_change:.3f}"
+            st.write(text)
+        else:
+            text = f"{bowler} → No significant change in win probability"
+            st.write(text)
+            
     best = suggestions[0][0]
     st.success(f"🏆 Best Bowler to Bowl Next: **{best}**")

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import os
 
 class LSTMModel(nn.Module):
     def __init__(self):
@@ -15,7 +16,10 @@ class LSTMModel(nn.Module):
 
 def load_lstm():
     model = LSTMModel()
-    model.load_state_dict(torch.load("lstm_model.pth", map_location="cpu"))
+    BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+    MODEL_PATH = os.path.join(BASE_DIR, "models", "lstm_model.pth")
+
+    model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu"))
     model.eval()
     return model
 

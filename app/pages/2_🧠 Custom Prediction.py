@@ -1,7 +1,22 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from app.lstm_predict import load_lstm, predict_lstm
+import os
+import sys
+
+st.set_page_config(
+    page_title="Custom Prediction",
+    page_icon="🧠"
+)
+
+CURRENT_DIR = os.path.dirname(__file__)          
+APP_DIR = os.path.dirname(CURRENT_DIR)           
+PROJECT_ROOT = os.path.dirname(APP_DIR)          
+
+sys.path.append(APP_DIR)
+
+from lstm_predict import load_lstm, predict_lstm
+
 
 st.title("🧠 Custom Match Prediction")
 
@@ -76,7 +91,7 @@ if balls_left > 0:
     else:
         dl_prob = predict_lstm(dl_model, seq)
 
-    st.subheader(f"🤖 Deep Learning Win Probability: {dl_prob:.2f}")
+    st.subheader(f"Chasing Team's Win Probability: {dl_prob:.2f}")
 
 else:
     st.subheader("Match Finished")
@@ -85,7 +100,7 @@ else:
 if balls_left > 0:
 
     st.markdown("---")
-    st.subheader("📈 Win Probability Projection")
+    st.subheader("📈 Win Probability Projection of Chasing Team")
 
     sims = 120
     curve = np.zeros(balls_left + 1)
@@ -125,8 +140,10 @@ if balls_left > 0:
             prob = predict_lstm(dl_model, seq_proj)
             curve[i] += prob
 
-            run = np.random.choice([0,1,2,4,6],
-                                   p=[0.30,0.40,0.10,0.15,0.05])
+            run = np.random.choice(
+                [0, 1, 2, 4, 6],
+                p=[0.30, 0.40, 0.10, 0.15, 0.05]
+            )
             temp_runs += run
 
     curve = curve / sims
