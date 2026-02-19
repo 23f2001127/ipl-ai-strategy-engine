@@ -20,16 +20,16 @@ Built using ball-by-ball IPL data from CricSheet.
 ## 📸 Screenshots
 
 ### Home Page
-![Home](screenshots/home.png)
+![Home](screenshots/Home.png)
 
 ### Replay Mode
-![Replay](screenshots/replay.png)
+![Replay](screenshots/Replay.png)
 
 ### Custom Prediction
-![Custom](screenshots/custom.png)
+![Custom](screenshots/Custom.png)
 
 ### Strategy Advisor
-![Strategy](screenshots/strategy.png)
+![Strategy](screenshots/Strategy.png)
 
 ---
 
