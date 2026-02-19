@@ -17,6 +17,22 @@ Built using ball-by-ball IPL data from CricSheet.
 
 ---
 
+## 📸 Screenshots
+
+### Home Page
+![Home](screenshots/home.png)
+
+### Replay Mode
+![Replay](screenshots/replay.png)
+
+### Custom Prediction
+![Custom](screenshots/custom.png)
+
+### Strategy Advisor
+![Strategy](screenshots/strategy.png)
+
+---
+
 ## 📊 Dataset
 
 **Source:** CricSheet IPL ball-by-ball dataset  
