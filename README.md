@@ -93,7 +93,7 @@ ipl-ai-strategy-engine/
 
 ```
 pip install -r requirements.txt
-streamlit run app/app.py
+streamlit run app/Home.py
 ```
 
 Then open the browser link shown in terminal.
